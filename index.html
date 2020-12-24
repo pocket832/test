@@ -1,12 +1,11 @@
 <!DOCTYPE html><html lang=“ja”><body><script>
 
-<audio id="sound" preload="auto">
-   <source src="people-performance-cheer1.mp3" type="audio/mp3">
-
-   <p>（audio要素に非対応なブラウザ向けの表示）</p>
-</audio>
+<audio id="sound" preload="auto"> <source src="people-performance-cheer1.mp3" type="audio/mp3"></audio>
 
 
+
+document.write('<audio id="sound" preload="auto"> <source src="people-performance-cheer1.mp3" type="audio/mp3"></audio>
+');
 
 const range = 2.2;
 const width = 1920;
@@ -102,7 +101,7 @@ for (let i = 1; i <Math.pow(2,n+1); i++) {
     document.write('<circle cx='+Ux[i]+' cy='+Uy[i]+' r="40"  style="fill:'+randomColor+';opacity:0.5" />');
   //枝分かれ点の座標はUに入っているから、そこを中心として乱数とって半径aの範囲のどこかに葉っぱを描く
 
-document.getElementById("sound").play();
+   document.getElementById("sound").play();
 
 
 
