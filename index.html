@@ -1,65 +1,112 @@
 <!DOCTYPE html><html lang=“ja”><body><script>
 
-const range = 2.2; // x軸両端の幅
-let x = -range/2; //始点のx座標
+const range = 2.2;
+const width = 1920;
+const height =1080;
 
-//軸線を描く
-document.write('<svg width=400 height=400><line x1=0 y1=200 x2=400 y2=200 stroke="black"/><line x1=200 y1=0 x2=200 y2=400 stroke="black"/>');
+document.write('<svg width=1920 height=1080>');
 
-//始めの三角形の座標を格納する
-//x座標を格納する配列
-let Ux = [-Math.sqrt(3)/2, Math.sqrt(3)/2, 0, -Math.sqrt(3)/2];
 
-//y座標を格納する配列
-let Uy = [-0.5, -0.5, 1, -0.5];
 
-for(let j = 0; j < 3; j++) {
+//木の述びる方向ベクトル
+let a = 0;
+let b = 1;
+//葉のレベル
+let n = 10;
+//根の座標
+let x = 0;
+let y = 0;
+//幹の長さ
+let A =50;
+//幹の長さを徐々に小さくするために使う変数
+let B=1;
+//枝分かれ点の座標を格納する配列
+let Ux=[];
+let Uy=[];
+//配列を葉の数だけ初期化
+for(let k = 0 ; k <Math.pow(2,n) ; k++){
+Ux.push(0);
+Uy.push(0);
+};
+//初めの根の座標を格納
+Ux[0]=x;
+Uy[0]=y;
+//次の枝分かれ点の座標を格納
+Ux[1]=A*a+Ux[0];
+Uy[1]=2*A*b+Uy[0];
 
-  //新しい座標を格納する配列
-  let Tx = [];
-  let Ty = [];
+//描画用に座標を並べて格納する配列
+let Tx=[];
+let Ty=[];
 
-  for (let i = 0; i < Ux.length -1; i++) {
+Tx.push(Ux[0],Ux[1]);
+Ty.push(Uy[0],Uy[1]);
 
-    const Ax = Ux[i]; //点Aの座標を代入
-    const Ay = Uy[i];
+for(let j = 1; j < Math.pow(2,n); j++){
 
-    const Bx = Ux[i+1]; //点Bの座標を代入
-    const By = Uy[i+1];
+  Ux[2*j]=(Math.sqrt(3)/2)*(Ux[j]-Ux[Math.floor(j/2)])-(1/2)*(Uy[j]-Uy[Math.floor(j/2)])+Ux[j];
+  Uy[2*j]=(1/2)*(Ux[j]-Ux[Math.floor(j/2)])+(Math.sqrt(3)/2)*(Uy[j]-Uy[Math.floor(j/2)])+Uy[j];
 
-    const Cx = 2/3*Ax+1/3*Bx; //点Cの座標を代入
-    const Cy = 2/3*Ay+1/3*By;
+  Ux[2*j+1]=(Math.sqrt(3)/2)*(Ux[j]-Ux[Math.floor(j/2)])+(1/2)*(Uy[j]-Uy[Math.floor(j/2)])+Ux[j];
+  Uy[2*j+1]=(-1/2)*(Ux[j]-Ux[Math.floor(j/2)])+(Math.sqrt(3)/2)*(Uy[j]-Uy[Math.floor(j/2)])+Uy[j];
 
-    const Dx = 1/2*(Ax+Bx)+Math.sqrt(3)/6*(By-Ay); //点Dの座標を代入
-    const Dy = 1/2*(Ay+By)+Math.sqrt(3)/6*(Ax-Bx);
 
-    const Ex = 1/3*Ax+2/3*Bx; //点Eの座標を代入
-    const Ey = 1/3*Ay+2/3*By;
 
-    //新しい座標をTxに格納する
-    Tx.push(Ax, Cx, Dx, Ex, Bx);
-    Ty.push(Ay, Cy, Dy, Ey, By);
 
-  };
+Tx.push(Ux[j],Ux[2*j]);
+Ty.push(Uy[j],Uy[2*j]);
 
-  //Txの内容をUxに代入する
-  Ux = Array.from(Tx);
-  Uy = Array.from(Ty);
+Tx.push(Ux[j],Ux[2*j+1]);
+Ty.push(Uy[j],Uy[2*j+1]);
+
+
 
 };
 
-//グラフを描く
-for (let i = 0; i < Ux.length - 1; i++) {
+  document.write('<g transform="translate(960,1000)scale('+1+', '+(-1)+')">');
+//世界樹を描く
+for (let i = 0; i <2*(Math.pow(2,n+1)-1); i++) {
 
-  document.write('<g transform="translate(200,200)scale('+(400/range)+', '+(-400/range)+')">');
 
-  document.write('<line x1='+Ux[i]+' y1='+Uy[i]+' x2='+Ux[i+1]+' y2='+Uy[i+1]+' stroke="black" stroke-width='+range/400*1+' />');
+
+  document.write('<line x1='+Tx[i]+' y1='+Ty[i]+' x2='+Tx[i+1]+' y2='+Ty[i+1]+' stroke="black" stroke-width='+2+' />');
+  i++;
+
+  let j=Math.floor(Math.pow(2,n)*Math.random());
+  let k=Math.floor(Math.pow(2,n)*Math.random());
+
+
+
+};
+
+
+
+//葉っぱを描く
+for (let i = 1; i <Math.pow(2,n+1); i++) {
+  let j=Math.floor((Math.pow(2,n+1)+1)*Math.random());
+
+
+  var randomColor = "rgb(" + (~~(256 * Math.random())) + ", " + (~~(256 * Math.random())) + ", " + (~~(256 * Math.random())) + ")" ;
+
+
+
+
+    document.write('<circle cx='+Ux[i]+' cy='+Uy[i]+' r="40"  style="fill:'+randomColor+';opacity:0.5" />');
+  //枝分かれ点の座標はUに入っているから、そこを中心として乱数とって半径aの範囲のどこかに葉っぱを描く
+
+
+
+
+
+
+};
+
+
 
   document.write('</g>');
 
-};
-
-//最後にタグを閉じる
+//タグを閉じる
 document.write('</svg>');
 
 </script></body></html>
+
